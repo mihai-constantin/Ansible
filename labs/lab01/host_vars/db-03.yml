@@ -1,0 +1,2 @@
+environment: "test"
+max_connections: 10

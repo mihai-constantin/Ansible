@@ -1,0 +1,2 @@
+db_admin: "superuser"
+max_connections: 50
