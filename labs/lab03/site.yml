@@ -1,0 +1,25 @@
+---
+
+- hosts: web01
+  gather_facts: false
+  become: true
+
+  tasks:
+  - name: install apache
+    package:
+      name: httpd
+      state: latest
+
+  - name: copy index.html
+    copy:
+      src: index.html
+      dest: /var/www/html
+      owner: apache
+      group: apache
+      mode: '0644'
+  
+  - name: apache is running and set to start on boot
+    service:
+      name: httpd
+      state: started
+      enabled: yes 
