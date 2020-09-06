@@ -1,0 +1,35 @@
+---
+
+- hosts: web01
+  gather_facts: false
+
+  tasks:
+  - name: create user
+    become: true
+    user:
+      name: john
+      generate_ssh_key: yes
+    register: user
+
+  - name: create john_key file
+    become: true
+    become_user: john
+    lineinfile:
+      path: /tmp/john_key
+      state: present
+      create: yes
+      line: "{{ user.ssh_public_key }}"
+
+  - name: get john's key from file
+    become: true
+    become_user: john
+    command: cat /tmp/john_key
+    register: key
+
+  - name: print john's key from key variable
+    debug:
+      var: key.stdout
+
+  - name: print ssh_key from user variable
+    debug:
+      var: user.ssh_public_key
