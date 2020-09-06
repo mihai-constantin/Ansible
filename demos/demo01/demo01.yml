@@ -1,0 +1,31 @@
+---
+
+# first play : web01
+
+- hosts: web01
+  gather_facts: false
+  remote_user: ansible
+
+  tasks:
+  - name: run whoami
+    command: whoami
+    register: who
+
+  - name: display the previous command output
+    debug:
+      var: who.stdout
+
+# second play : web02
+- hosts: web02
+  gather_facts: false
+  remote_user: dbadmin
+
+  tasks:
+  - name: run whoami
+    command: whoami
+    register: who
+  
+  - name: display the previos command output
+    debug:
+      msg: "remote_user is {{ who.stdout }}"
+
