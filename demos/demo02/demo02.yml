@@ -1,0 +1,30 @@
+---
+
+- hosts: web01
+  gather_facts: false
+
+  tasks:
+  - name: create alice user
+    become: true
+    user:
+      name: alice
+    register: user
+  
+  - name: print user details
+    debug:
+      msg: "uid: {{ user.uid }} shell: {{ user.shell }} home: {{ user.home }}"
+
+  - name: create file as user alice
+    become: true
+    become_user: alice
+    shell: touch wonderland; ls -laR
+    register: shell
+
+  - name: print command details 1
+    debug:
+      var: shell.stdout
+
+  # same output as the previous one, but displayed line by line
+  - name: print command details 2
+    debug:
+      var: shell.stdout_lines
