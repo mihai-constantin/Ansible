@@ -1,0 +1,51 @@
+---
+
+- name: handlers playbook
+  hosts: webservers
+  gather_facts: true
+  become: true
+  
+  tasks:
+  - name: install apache
+    package:
+      name: httpd
+      state: latest
+
+  - name: apache is running and enabled at boot
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: copy conf file
+    copy:
+      src: wonderland.conf
+      dest: /etc/httpd/conf.d
+    notify: restart httpd
+
+  - name: create /opt/httpd/wonderland directory
+    file:
+      path: /opt/httpd/wonderland
+      state: directory
+      owner: apache
+      group: apache
+      mode: '0750'
+
+  - name: create index.html file
+    blockinfile:
+      path: /opt/httpd/wonderland/index.html
+      owner: apache
+      group: apache
+      mode: '0640'
+      create: yes
+      marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+      block: |
+        <h1>Hello from Wonderland!</h1>
+        <p>Private IP is {{ ansible_eth0.ipv4.address }} </p>
+        <p>Last updated on {{ ansible_date_time.weekday }}, {{ ansible_date_time.date }}</p>
+
+  handlers:
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
