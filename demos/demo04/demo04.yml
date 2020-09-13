@@ -1,0 +1,21 @@
+---
+
+- name: demo handlers
+  hosts: web01
+  gather_facts: true
+  become: true
+
+  tasks:
+  - name: change apache listening port to 8080
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      line: "Listen 8080"
+      regexp: "^Listen"
+    notify: restart httpd
+
+  handlers:
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
+    
