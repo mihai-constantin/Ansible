@@ -10,7 +10,7 @@
     import_role:
       name: httpd
 
-  - name: index.html - lineinfile
+  - name: index
     lineinfile:
       path: /var/www/html/index.html
       state: present
