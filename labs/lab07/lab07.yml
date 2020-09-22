@@ -1,0 +1,21 @@
+---
+
+- name: roles playbook
+  hosts: webservers
+  gather_facts: false
+  become: true
+
+  tasks:
+  - name: import httpd 
+    import_role:
+      name: httpd
+
+  - name: index.html - lineinfile
+    lineinfile:
+      path: /var/www/html/index.html
+      state: present
+      create: true
+      line: "Hello again"
+      owner: apache
+      group: apache
+      mode: '0644'

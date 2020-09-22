@@ -1,0 +1,14 @@
+---
+
+- name: install apache
+  package:
+    name: httpd
+    state: latest
+
+- name: start and enable at boot
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  notify: restart httpd
+  
